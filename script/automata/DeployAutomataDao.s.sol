@@ -12,7 +12,8 @@ import {AutomataPcsDao} from "../../src/automata_pccs/AutomataPcsDao.sol";
 import {AutomataPckDao} from "../../src/automata_pccs/AutomataPckDao.sol";
 
 contract DeployAutomataDao is DeploymentConfig, P256Configuration {
-    address owner = vm.envAddress("OWNER");
+    uint256 deployerKey = uint256(vm.envBytes32("ETH_WALLET_PRIVATE_KEY"));
+    address owner = vm.addr(deployerKey);
 
     address x509Crl = readContractAddress("X509CRLHelper", true);
     address x509 = readContractAddress("PCKHelper", true);
@@ -24,7 +25,7 @@ contract DeployAutomataDao is DeploymentConfig, P256Configuration {
     }
 
     modifier broadcastOwner() {
-        vm.startBroadcast(owner);
+        vm.startBroadcast(deployerKey);
         _;
         vm.stopBroadcast();
     }

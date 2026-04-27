@@ -10,7 +10,8 @@ import "../utils/Salt.sol";
 import "../utils/DeploymentConfig.sol";
 
 contract DeployHelpers is DeploymentConfig {
-    address owner = vm.envAddress("OWNER");
+    uint256 deployerKey = uint256(vm.envBytes32("ETH_WALLET_PRIVATE_KEY"));
+    address owner = vm.addr(deployerKey);
 
     function run() public {
         deployEnclaveIdentityHelper();
@@ -21,7 +22,7 @@ contract DeployHelpers is DeploymentConfig {
     }
 
     function deployEnclaveIdentityHelper() public {
-        vm.startBroadcast();
+        vm.startBroadcast(deployerKey);
         EnclaveIdentityHelper enclaveIdentityHelper = new EnclaveIdentityHelper{salt: ENCLAVE_IDENTITY_HELPER_SALT}();
         console.log("[LOG] EnclaveIdentityHelper: ", address(enclaveIdentityHelper));
         vm.stopBroadcast();
@@ -30,7 +31,7 @@ contract DeployHelpers is DeploymentConfig {
     }
 
     function deployFmspcTcbHelper() public {
-        vm.startBroadcast(owner);
+        vm.startBroadcast(deployerKey);
         FmspcTcbHelper fmspcTcbHelper = new FmspcTcbHelper{salt: FMSPC_TCB_HELPER_SALT}();
         console.log("[LOG] FmspcTcbHelper: ", address(fmspcTcbHelper));
         vm.stopBroadcast();
@@ -39,7 +40,7 @@ contract DeployHelpers is DeploymentConfig {
     }
 
     function deployPckHelper() public {
-        vm.startBroadcast(owner);
+        vm.startBroadcast(deployerKey);
         PCKHelper pckHelper = new PCKHelper{salt: X509_HELPER_SALT}();
         console.log("[LOG] PCKHelper/X509Helper: ", address(pckHelper));
         vm.stopBroadcast();
@@ -48,7 +49,7 @@ contract DeployHelpers is DeploymentConfig {
     }
 
     function deployX509CrlHelper() public {
-        vm.startBroadcast(owner);
+        vm.startBroadcast(deployerKey);
         X509CRLHelper x509Helper = new X509CRLHelper{salt: X509_CRL_HELPER_SALT}();
         console.log("[LOG] X509CRLHelper: ", address(x509Helper));
         vm.stopBroadcast();
@@ -57,7 +58,7 @@ contract DeployHelpers is DeploymentConfig {
     }
 
     function deployTcbEvalHelper() public {
-        vm.startBroadcast(owner);
+        vm.startBroadcast(deployerKey);
         TcbEvalHelper tcbEvalHelper = new TcbEvalHelper{salt: TCB_EVAL_HELPER_SALT}();
         console.log("[LOG] TcbEvalHelper: ", address(tcbEvalHelper));
         vm.stopBroadcast();

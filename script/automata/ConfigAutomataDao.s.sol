@@ -11,19 +11,20 @@ import {AutomataPcsDao} from "../../src/automata_pccs/AutomataPcsDao.sol";
 import {AutomataPckDao} from "../../src/automata_pccs/AutomataPckDao.sol";
 
 contract ConfigAutomataDao is DeploymentConfig, Multichain {
-    address owner = vm.envAddress("OWNER");
+    uint256 deployerKey = uint256(vm.envBytes32("ETH_WALLET_PRIVATE_KEY"));
+    address owner = vm.addr(deployerKey);
 
     address pccsStorageAddr = readContractAddress("AutomataDaoStorage", true);
 
     function grantDao(address dao) public {
-        vm.broadcast(owner);
+        vm.broadcast(deployerKey);
 
         AutomataDaoStorage pccsStorage = AutomataDaoStorage(pccsStorageAddr);
         pccsStorage.grantDao(dao);
     }
 
     function revokeDao(address dao) public {
-        vm.broadcast(owner);
+        vm.broadcast(deployerKey);
 
         AutomataDaoStorage(pccsStorageAddr).revokeDao(dao);
     }
@@ -33,7 +34,7 @@ contract ConfigAutomataDao is DeploymentConfig, Multichain {
         bool authorizedCaller = pccsStorage.isAuthorizedCaller(caller);
 
         if (authorized != authorizedCaller) {
-            vm.broadcast(owner);
+            vm.broadcast(deployerKey);
             pccsStorage.setCallerAuthorization(caller, authorized);
         } else {
             console.log("Skip setAuthorizedCaller()");
