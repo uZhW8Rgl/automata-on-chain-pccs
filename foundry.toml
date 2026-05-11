@@ -9,6 +9,7 @@ ffi = true
 solc = "0.8.27"
 optimizer = true
 optimizer_runs = 999999
+ignored_error_codes = [2018, 2072, 2424, 2519, 5574, 6321, 8429]
 # https://github.com/foundry-rs/foundry/issues/6780
 via_ir = true
 evm_version = "paris"
